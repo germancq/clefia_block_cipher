@@ -24,7 +24,7 @@ def setup_dut(dut, key, plaintext):
     dut.rst.value = 0
     dut.key.value = key
     dut.block_i.value = plaintext
-    dut.rq_data = 1
+    dut.rq_data.value = 1
 
 
 async def n_cycles_clock(dut, n):
@@ -43,7 +43,8 @@ async def test(dut, index=0):
 
     setup_dut(dut, key, plaintext)
 
-    expected_wk, expected_rk = clefia_sw.key_schedule(key, dut.KEY_LEN.value)
+    expected_wk, expected_rk = clefia_sw.key_schedule(
+        key, int(dut.KEY_LEN.value))
     expected_result = clefia_sw.encrypt(plaintext, expected_wk, expected_rk)
 
     p_a = np.zeros(4, dtype=np.uint32)

@@ -13,7 +13,6 @@ import clefia
 import cocotb
 import numpy as np
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 CLK_PERIOD = 20
@@ -21,7 +20,7 @@ CLK_PERIOD = 20
 
 def setup_dut(dut, key, plaintext):
     print("setup block cipher")
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD, unit="ns").start())
     dut.rst.value = 0
     dut.key.value = key
     dut.block_i.value = plaintext
@@ -35,6 +34,7 @@ async def n_cycles_clock(dut, n):
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 10))
 async def test(dut, index=0):
 
     clefia_sw = clefia.CLEFIA()
@@ -94,10 +94,3 @@ async def test(dut, index=0):
     assert hex(dut.block_o.value) == hex(
         expected_result
     ), f"ERROR IN RESULT expected={hex(expected_result)} calculated={hex(dut.block_o.value)}"
-
-
-n = 10
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

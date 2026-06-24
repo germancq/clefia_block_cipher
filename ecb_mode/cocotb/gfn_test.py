@@ -28,7 +28,7 @@ def setup_block_cipher(dut, blk_i, rk):
         dut.block_i[i].value = aux
         blk_i[i] = aux
 
-    for i in range(0, int(dut.d.value / 2) * dut.r.value):
+    for i in range(0, int(int(dut.d.value) / 2) * int(dut.r.value)):
         aux = random.getrandbits(32)
         dut.round_keys[i].value = aux
         rk[i] = aux
@@ -80,7 +80,7 @@ async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
         dut.current_state.value == dut.STEP_2_1.value
     ), f"ERROR STATE IN STEP_2_1, STATE={dut.current_state.value}"
     expected_f0_x_input_0 = blk_i[0]
-    expected_f0_rk_input_0 = rk[(int(dut.d.value / 2)) * counter_value]
+    expected_f0_rk_input_0 = rk[(int(int(dut.d.value) / 2)) * counter_value]
     expected_f0_output_0 = clefia_sw.F0(expected_f0_rk_input_0, expected_f0_x_input_0)[
         0
     ]
@@ -88,7 +88,8 @@ async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
     blk_i[1] = expected_next_T1
 
     expected_f1_x_input_0 = blk_i[2]
-    expected_f1_rk_input_0 = rk[((int(dut.d.value / 2)) * counter_value) + 1]
+    expected_f1_rk_input_0 = rk[(
+        (int(int(dut.d.value) / 2)) * counter_value) + 1]
     expected_f1_output_0 = clefia_sw.F1(expected_f1_rk_input_0, expected_f1_x_input_0)[
         0
     ]
@@ -124,7 +125,7 @@ async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
     if dut.d.value == 8:
         expected_f0_x_input_1 = blk_i[4]
         expected_f0_rk_input_1 = rk[(
-            (int(dut.d.value / 2)) * counter_value) + 2]
+            (int(int(dut.d.value) / 2)) * counter_value) + 2]
         expected_f0_output_1 = clefia_sw.F0(
             expected_f0_rk_input_1, expected_f0_x_input_1
         )[0]
@@ -218,11 +219,13 @@ async def test(dut, index=0):
 
     await Timer(20, units="ns")
     blk_i = np.zeros(dut.d.value, dtype=np.uint32)
-    rk = np.zeros(int(dut.d.value / 2) * dut.r.value, dtype=np.uint32)
+    rk = np.zeros(int(int(dut.d.value) / 2) *
+                  int(dut.r.value), dtype=np.uint32)
     setup_block_cipher(dut, blk_i, rk)
     blk_i_cp = np.copy(blk_i)
     rk_cp = np.copy(rk)
-    expected_result = clefia_sw.GFN(dut.d.value, dut.r.value, blk_i_cp, rk_cp)
+    expected_result = clefia_sw.GFN(
+        int(dut.d.value), int(dut.r.value), blk_i_cp, rk_cp)
 
     await rst_function_test(dut)
     print("final")

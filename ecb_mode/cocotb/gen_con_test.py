@@ -12,11 +12,11 @@ import sys
 import clefia
 import cocotb
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 1))
 async def test(dut, index=0):
 
     await Timer(10, units="ns")
@@ -53,10 +53,3 @@ async def test(dut, index=0):
         assert hex(dut.CON_256[i].value) == hex(
             expected_result[i]
         ), f"ERROR, EXPECTED value should be {hex(expected_result[i])}, however hdl value is {hex(dut.CON_256[i].value)}"
-
-
-n = 0x1
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

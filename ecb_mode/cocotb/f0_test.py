@@ -14,7 +14,6 @@ import clefia
 import cocotb
 import numpy as np
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 M0 = np.array([[1, 2, 4, 6], [2, 1, 6, 4], [4, 6, 1, 2], [6, 4, 2, 1]])
@@ -26,6 +25,7 @@ def setup_block_cipher(dut, x, rk):
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 10))
 async def test(dut, index=0):
 
     x = random.getrandbits(32)
@@ -59,10 +59,3 @@ async def test(dut, index=0):
     assert hex(dut.y.value) == hex(
         expected_result[0]
     ), f"ERROR, EXPECTED value should be {expected_result}, however hdl value is {hex(dut.y.value)}"
-
-
-n = 0x10
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

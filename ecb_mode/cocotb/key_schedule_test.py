@@ -14,7 +14,6 @@ import clefia
 import cocotb
 import numpy as np
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 CLK_PERIOD = 20
@@ -248,6 +247,7 @@ async def n_cycles_clock(dut, n):
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 10))
 async def test(dut, index=0):
 
     clefia_sw = clefia.CLEFIA()
@@ -266,7 +266,8 @@ async def test(dut, index=0):
     L_left = np.zeros(4, dtype=np.uint32)
     L_right = np.zeros(4, dtype=np.uint32)
     for i in range(0, int(dut.KEY_LEN.value / 32)):
-        key_a[int(dut.KEY_LEN.value / 32) - 1 - i] = key >> (i * 32) & 0xFFFFFFFF
+        key_a[int(dut.KEY_LEN.value / 32) - 1 -
+              i] = key >> (i * 32) & 0xFFFFFFFF
         print(hex(key_a[int(dut.KEY_LEN.value / 32) - 1 - i]))
     # key 128-bits
     print(key_a)
@@ -303,7 +304,7 @@ async def test(dut, index=0):
     else:
         WK = np.copy(key_a)
 
-    #############TESTBENCH COCOTB####################
+    ############# TESTBENCH COCOTB####################
     await gfn_test(dut, L, CON, cp_key_a, keyL_a, keyR_a, L_left, L_right)
 
     #################################################
@@ -332,7 +333,7 @@ async def test(dut, index=0):
         cte_index = 40
 
     for i in range(0, index + 1):
-        #############TESTBENCH COCOTB####################
+        ############# TESTBENCH COCOTB####################
         await check_counter_test(dut, i)
 
         #################################################
@@ -365,7 +366,7 @@ async def test(dut, index=0):
                 )
                 T[j] = T[j] ^ K_aux[j]
 
-        #############TESTBENCH COCOTB####################
+        ############# TESTBENCH COCOTB####################
         await gen_t_test(dut, T_copy)
 
         #################################################
@@ -377,7 +378,7 @@ async def test(dut, index=0):
         else:
             L_right = clefia_sw.doubleSwap(L_right)
 
-        #############TESTBENCH COCOTB####################
+        ############# TESTBENCH COCOTB####################
         await check_odd_test(dut, L, T, i)
 
         #################################################
@@ -386,17 +387,10 @@ async def test(dut, index=0):
             RK[(4 * i) + j] = T[j]
             print("RK[{}] = {}".format((4 * i) + j, hex(T[j])))
 
-        #############TESTBENCH COCOTB####################
+        ############# TESTBENCH COCOTB####################
         await gen_rk_test(dut, RK, i)
         await update_counter_test(dut)
 
         #################################################
     await check_counter_test(dut, index + 1)
     await end_fsm_state(dut, expected_rk, expected_wk)
-
-
-n = 10
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

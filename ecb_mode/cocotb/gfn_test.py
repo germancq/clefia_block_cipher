@@ -14,7 +14,6 @@ import clefia
 import cocotb
 import numpy as np
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 CLK_PERIOD = 20
@@ -124,19 +123,23 @@ async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
 
     if dut.d.value == 8:
         expected_f0_x_input_1 = blk_i[4]
-        expected_f0_rk_input_1 = rk[((int(dut.d.value / 2)) * counter_value) + 2]
+        expected_f0_rk_input_1 = rk[(
+            (int(dut.d.value / 2)) * counter_value) + 2]
         expected_f0_output_1 = clefia_sw.F0(
             expected_f0_rk_input_1, expected_f0_x_input_1
         )[0]
-        expected_next_T5 = clefia_sw.galois8.add(blk_i[5], expected_f0_output_1)
+        expected_next_T5 = clefia_sw.galois8.add(
+            blk_i[5], expected_f0_output_1)
         blk_i[5] = expected_next_T5
 
         expected_f1_x_input_1 = blk_i[6]
-        expected_f1_rk_input_1 = rk[((int(dut.d.value / 2)) * counter_value) + 3]
+        expected_f1_rk_input_1 = rk[(
+            (int(dut.d.value / 2)) * counter_value) + 3]
         expected_f1_output_1 = clefia_sw.F1(
             expected_f1_rk_input_1, expected_f1_x_input_1
         )[0]
-        expected_next_T7 = clefia_sw.galois8.add(blk_i[7], expected_f1_output_1)
+        expected_next_T7 = clefia_sw.galois8.add(
+            blk_i[7], expected_f1_output_1)
         blk_i[7] = expected_next_T7
 
         assert hex(dut.f0_x_input[1].value) == hex(
@@ -208,6 +211,7 @@ async def n_cycles_clock(dut, n):
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 10))
 async def test(dut, index=0):
 
     clefia_sw = clefia.CLEFIA()
@@ -230,10 +234,3 @@ async def test(dut, index=0):
 
     await step2_test(dut, dut.r.value)
     await step3_test(dut, expected_result)
-
-
-n = 10
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

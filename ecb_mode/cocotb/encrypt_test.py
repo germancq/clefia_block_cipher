@@ -13,7 +13,6 @@ import clefia
 import cocotb
 import numpy as np
 from cocotb.clock import Clock
-from cocotb.regression import TestFactory
 from cocotb.triggers import FallingEdge, RisingEdge, Timer
 
 CLK_PERIOD = 20
@@ -127,6 +126,7 @@ async def n_cycles_clock(dut, n):
 
 
 @cocotb.test()
+@cocotb.parametrize(index=range(0, 10))
 async def test(dut, index=0):
 
     clefia_sw = clefia.CLEFIA()
@@ -171,10 +171,3 @@ async def test(dut, index=0):
     print(t)
     await write_output_test(dut, t)
     await end_fsm_state(dut, t)
-
-
-n = 10
-factory = TestFactory(test)
-
-factory.add_option("index", range(0, n))
-factory.generate_tests()

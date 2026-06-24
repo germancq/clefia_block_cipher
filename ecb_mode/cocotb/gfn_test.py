@@ -68,8 +68,8 @@ async def step2_test(dut, expected_counter_value):
     assert int(dut.current_state.value) == int(
         dut.STEP_2.value
     ), f"ERROR STATE IN STEP_2, STATE={dut.current_state.value}"
-    assert (
-        dut.dout_rounds_counter.value == expected_counter_value
+    assert int(dut.dout_rounds_counter.value) == int(
+        expected_counter_value
     ), f"ERROR STATE IN STEP_2, expected_value = {expected_counter_value}, counter_value={dut.dout_rounds_counter.value}"
 
 

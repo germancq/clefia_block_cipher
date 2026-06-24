@@ -30,13 +30,13 @@ async def rst_function_test(dut):
     print("rst function")
     dut.rst.value = 1
     await n_cycles_clock(dut, 1)
-    assert (
-        int(dut.current_state.value) == int(dut.IDLE.value)
+    assert int(dut.current_state.value) == int(
+        dut.IDLE.value
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
     await n_cycles_clock(dut, 5)
 
-    assert (
-        int(dut.current_state.value) == int(dut.IDLE.value)
+    assert int(dut.current_state.value) == int(
+        dut.IDLE.value
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
 
     assert (
@@ -62,7 +62,7 @@ async def gfn_test(
         dut.WAIT_FOR_GFN.value
     ), f"ERROR STATE IN WAIT_FOR_GFN, STATE={dut.current_state.value}"
 
-    while (dut.gfn4_end_signal.value == 0) or (dut.gfn8_end_signal == 0):
+    while (dut.gfn4_end_signal.value == 0) or (dut.gfn8_end_signal.value == 0):
         print(dut.current_state.value)
         await n_cycles_clock(dut, 1)
 
@@ -213,7 +213,7 @@ async def end_fsm_state(dut, expected_RK, expected_WK):
         dut.END_FSM_STATE.value
     ), f"ERROR STATE IN END_FSM_STATE, STATE={dut.current_state.value}"
 
-    assert dut.end_signal == 1, f"ERROR with end_signal"
+    assert dut.end_signal.value == 1, f"ERROR with end_signal"
 
     print(hex(dut.WK_din.value[0]))
     print(hex(dut.WK_din.value[1]))

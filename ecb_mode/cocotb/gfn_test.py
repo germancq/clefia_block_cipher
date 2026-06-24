@@ -40,13 +40,13 @@ async def rst_function_test(dut):
     print("rst function")
     dut.rst.value = 1
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.STEP_1.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_1.value
     ), f"ERROR STATE IN STEP_1, STATE={dut.current_state.value}"
     await n_cycles_clock(dut, 10)
 
-    assert (
-        dut.current_state.value == dut.STEP_1.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_1.value
     ), f"ERROR STATE IN STEP_1, STATE={dut.current_state.value}"
 
     assert (
@@ -65,8 +65,8 @@ async def rst_function_test(dut):
 async def step2_test(dut, expected_counter_value):
     print("step 2")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.STEP_2.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_2.value
     ), f"ERROR STATE IN STEP_2, STATE={dut.current_state.value}"
     assert (
         dut.dout_rounds_counter.value == expected_counter_value
@@ -76,8 +76,8 @@ async def step2_test(dut, expected_counter_value):
 async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
     print("step 2.1")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.STEP_2_1.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_2_1.value
     ), f"ERROR STATE IN STEP_2_1, STATE={dut.current_state.value}"
     expected_f0_x_input_0 = blk_i[0]
     expected_f0_rk_input_0 = rk[(int(int(dut.d.value) / 2)) * counter_value]
@@ -175,8 +175,8 @@ async def step2_1_test(dut, clefia_sw, blk_i, rk, counter_value):
 async def step2_2_test(dut, clefia_sw, blk_i):
     print("step 2.2")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.STEP_2_2.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_2_2.value
     ), f"ERROR STATE IN STEP_2_2, STATE={dut.current_state.value}"
     blk_i = np.roll(blk_i, -1)
     for i in range(0, dut.d.value):
@@ -193,8 +193,8 @@ async def step2_2_test(dut, clefia_sw, blk_i):
 async def step3_test(dut, expected_result):
     print("step 3")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.STEP_3.value
+    assert int(dut.current_state.value) == int(
+        dut.STEP_3.value
     ), f"ERROR STATE IN STEP_3 STATE={dut.current_state.value}"
     for i in range(0, dut.d.value):
         print(dut.T_dout[i].value)

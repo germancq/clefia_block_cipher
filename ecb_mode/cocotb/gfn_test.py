@@ -218,7 +218,7 @@ async def test(dut, index=0):
     clefia_sw = clefia.CLEFIA()
 
     await Timer(20, units="ns")
-    blk_i = np.zeros(dut.d.value, dtype=np.uint32)
+    blk_i = np.zeros(int(dut.d.value), dtype=np.uint32)
     rk = np.zeros(int(int(dut.d.value) / 2) *
                   int(dut.r.value), dtype=np.uint32)
     setup_block_cipher(dut, blk_i, rk)

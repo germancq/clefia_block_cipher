@@ -21,7 +21,7 @@ CLK_PERIOD = 20
 
 def setup_block_cipher(dut, blk_i, rk):
     print("setup block cipher")
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD, unit="ns").start())
     dut.rst.value = 0
     for i in range(0, dut.d.value):
         aux = random.getrandbits(32)

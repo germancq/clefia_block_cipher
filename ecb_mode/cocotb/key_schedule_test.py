@@ -261,15 +261,15 @@ async def test(dut, index=0):
     setup_dut(dut, key)
     await rst_function_test(dut)
 
-    key_a = np.zeros(int(dut.KEY_LEN.value / 32), dtype=np.uint32)
+    key_a = np.zeros(int(int(dut.KEY_LEN.value) / 32), dtype=np.uint32)
     keyL_a = np.zeros(4, dtype=np.uint32)
     keyR_a = np.zeros(4, dtype=np.uint32)
     L_left = np.zeros(4, dtype=np.uint32)
     L_right = np.zeros(4, dtype=np.uint32)
-    for i in range(0, int(dut.KEY_LEN.value / 32)):
-        key_a[int(dut.KEY_LEN.value / 32) - 1 -
+    for i in range(0, int(int(dut.KEY_LEN.value) / 32)):
+        key_a[int(int(dut.KEY_LEN.value) / 32) - 1 -
               i] = key >> (i * 32) & 0xFFFFFFFF
-        print(hex(key_a[int(dut.KEY_LEN.value / 32) - 1 - i]))
+        print(hex(key_a[int(int(dut.KEY_LEN.value) / 32) - 1 - i]))
     # key 128-bits
     print(key_a)
     for i in range(0, 4):

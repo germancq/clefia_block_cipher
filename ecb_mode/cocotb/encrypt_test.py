@@ -40,13 +40,13 @@ async def rst_function_test(dut):
     print("rst function")
     dut.rst.value = 1
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.IDLE.value
+    assert int(dut.current_state.value) == int(
+        dut.IDLE.value
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
     await n_cycles_clock(dut, 5)
 
-    assert (
-        dut.current_state.value == dut.IDLE.value
+    assert int(dut.current_state.value) == int(
+        dut.IDLE.value
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
 
     dut.rst.value = 0
@@ -56,8 +56,8 @@ async def gfn_test(dut, expected_block_i, expected_rk, expected_output):
     print("wait for gfn test")
     print(dut.start.value)
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.WAIT_FOR_GFN.value
+    assert int(dut.current_state.value) == int(
+        dut.WAIT_FOR_GFN.value
     ), f"ERROR STATE IN WAIT_FOR_GFN, STATE={dut.current_state.value}"
 
     while dut.gfn_end_signal.value == 0:
@@ -94,8 +94,8 @@ async def gfn_test(dut, expected_block_i, expected_rk, expected_output):
 async def write_output_test(dut, expected_result):
     print("write_output_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.WRITE_OUTPUT.value
+    assert int(dut.current_state.value) == int(
+        dut.WRITE_OUTPUT.value
     ), f"ERROR STATE IN WRITE_OUTPUT, STATE={dut.current_state.value}"
 
     for i in range(0, 4):
@@ -107,8 +107,8 @@ async def write_output_test(dut, expected_result):
 async def end_fsm_state(dut, expected_result):
     print("end_fsm_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.END_STATE.value
+    assert int(dut.current_state.value) == int(
+        dut.END_STATE.value
     ), f"ERROR STATE IN END_STATE, STATE={dut.current_state.value}"
 
     assert dut.end_signal == 1, f"ERROR with end_signal"
@@ -133,7 +133,8 @@ async def test(dut, index=0):
     key = random.getrandbits(dut.KEY_LEN.value)
     plaintext = random.getrandbits(128)
 
-    expected_wk, expected_rk = clefia_sw.key_schedule(key, dut.KEY_LEN.value)
+    expected_wk, expected_rk = clefia_sw.key_schedule(
+        key, int(dut.KEY_LEN.value))
     expected_result = clefia_sw.encrypt(plaintext, expected_wk, expected_rk)
 
     p_a = np.zeros(4, dtype=np.uint32)

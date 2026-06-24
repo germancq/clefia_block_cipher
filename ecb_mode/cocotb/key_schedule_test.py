@@ -31,12 +31,12 @@ async def rst_function_test(dut):
     dut.rst.value = 1
     await n_cycles_clock(dut, 1)
     assert (
-        dut.current_state.value == dut.IDLE.value
+        int(dut.current_state.value) == int(dut.IDLE.value)
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
     await n_cycles_clock(dut, 5)
 
     assert (
-        dut.current_state.value == dut.IDLE.value
+        int(dut.current_state.value) == int(dut.IDLE.value)
     ), f"ERROR STATE IN IDLE, STATE={dut.current_state.value}"
 
     assert (
@@ -58,8 +58,8 @@ async def gfn_test(
 ):
     print("wait for gfn test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.WAIT_FOR_GFN.value
+    assert int(dut.current_state.value) == int(
+        dut.WAIT_FOR_GFN.value
     ), f"ERROR STATE IN WAIT_FOR_GFN, STATE={dut.current_state.value}"
 
     while (dut.gfn4_end_signal.value == 0) or (dut.gfn8_end_signal == 0):
@@ -134,8 +134,8 @@ async def gfn_test(
 async def check_counter_test(dut, expected_counter_value):
     print("check_counter_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.CHECK_COUNTER.value
+    assert int(dut.current_state.value) == int(
+        dut.CHECK_COUNTER.value
     ), f"ERROR STATE IN CHECK_COUNTER, STATE={dut.current_state.value}"
 
     assert hex(dut.dout_rounds_counter.value) == hex(
@@ -146,8 +146,8 @@ async def check_counter_test(dut, expected_counter_value):
 async def gen_t_test(dut, expected_T):
     print("gen_t_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.GEN_T.value
+    assert int(dut.current_state.value) == int(
+        dut.GEN_T.value
     ), f"ERROR STATE IN GEN_T, STATE={dut.current_state.value}"
 
     for i in range(0, 4):
@@ -159,8 +159,8 @@ async def gen_t_test(dut, expected_T):
 async def check_odd_test(dut, expected_L, expected_T, expected_counter_value):
     print("check_odd_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.CHECK_ODD.value
+    assert int(dut.current_state.value) == int(
+        dut.CHECK_ODD.value
     ), f"ERROR STATE IN CHECK_ODD, STATE={dut.current_state.value}"
 
     print(hex(dut.LL_din[0].value))
@@ -188,8 +188,8 @@ async def check_odd_test(dut, expected_L, expected_T, expected_counter_value):
 async def gen_rk_test(dut, expected_RK, expected_counter_value):
     print("gen_rk_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.GEN_RK.value
+    assert int(dut.current_state.value) == int(
+        dut.GEN_RK.value
     ), f"ERROR STATE IN GEN_RK, STATE={dut.current_state.value}"
 
     for i in range(0, 4):
@@ -201,16 +201,16 @@ async def gen_rk_test(dut, expected_RK, expected_counter_value):
 async def update_counter_test(dut):
     print("update_counter_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.UPDATE_COUNTER.value
+    assert int(dut.current_state.value) == int(
+        dut.UPDATE_COUNTER.value
     ), f"ERROR STATE IN UPDATE_COUNTER, STATE={dut.current_state.value}"
 
 
 async def end_fsm_state(dut, expected_RK, expected_WK):
     print("end_fsm_test")
     await n_cycles_clock(dut, 1)
-    assert (
-        dut.current_state.value == dut.END_FSM_STATE.value
+    assert int(dut.current_state.value) == int(
+        dut.END_FSM_STATE.value
     ), f"ERROR STATE IN END_FSM_STATE, STATE={dut.current_state.value}"
 
     assert dut.end_signal == 1, f"ERROR with end_signal"

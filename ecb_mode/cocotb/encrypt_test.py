@@ -111,7 +111,7 @@ async def end_fsm_state(dut, expected_result):
         dut.END_STATE.value
     ), f"ERROR STATE IN END_STATE, STATE={dut.current_state.value}"
 
-    assert dut.end_signal == 1, f"ERROR with end_signal"
+    assert dut.end_signal.value == 1, f"ERROR with end_signal"
 
     for i in range(0, 4):
         assert hex(dut.block_o[i].value) == hex(
